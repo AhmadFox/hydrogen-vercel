@@ -13,9 +13,10 @@ import {
 } from 'react-router';
 import favicon from '~/assets/favicon.svg';
 import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
-import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
+import tailwindStyles from '~/styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
+import { ThemeProvider } from './context/ThemeContext';
 
 export type RootLoader = typeof loader;
 
@@ -150,23 +151,27 @@ export function Layout({children}: {children?: React.ReactNode}) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <link rel="stylesheet" href={resetStyles}></link>
         <link rel="stylesheet" href={appStyles}></link>
+        <link rel="stylesheet" href={tailwindStyles}></link>
         <Meta />
         <Links />
       </head>
       <body>
+      <ThemeProvider>
         {data ? (
           <Analytics.Provider
             cart={data.cart}
             shop={data.shop}
             consent={data.consent}
           >
-            <PageLayout {...data}>{children}</PageLayout>
+          <PageLayout {...data}>
+              {children}
+            </PageLayout>
           </Analytics.Provider>
         ) : (
           children
         )}
+       </ThemeProvider>
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
       </body>
@@ -175,7 +180,9 @@ export function Layout({children}: {children?: React.ReactNode}) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return(
+    <Outlet />
+  )
 }
 
 export function ErrorBoundary() {

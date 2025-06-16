@@ -1,5 +1,6 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, type MetaFunction} from 'react-router';
+import { Block, BlockFooter, Page as KonstaPage, Navbar } from 'konsta/react';
+import {useLoaderData, useNavigate, type MetaFunction} from 'react-router';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
@@ -60,14 +61,28 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 
 export default function Page() {
   const {page} = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
 
   return (
-    <div className="page">
-      <header>
-        <h1>{page.title}</h1>
-      </header>
-      <main dangerouslySetInnerHTML={{__html: page.body}} />
-    </div>
+
+      <KonstaPage
+       key={location.pathname}
+       className='collections scrollbar-hide'
+      >
+         <Navbar
+        title={page.title}
+        className="top-0 sticky"
+        left={
+          <button onClick={() => navigate(-1)}>
+            Back
+          </button>
+        }
+      />
+      <Block>
+        <main dangerouslySetInnerHTML={{__html: page.body}} />
+      </Block>
+      </KonstaPage>
+
   );
 }
 

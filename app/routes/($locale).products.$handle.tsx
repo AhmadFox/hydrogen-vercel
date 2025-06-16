@@ -1,5 +1,5 @@
 import {redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, type MetaFunction} from 'react-router';
+import {useLoaderData, type MetaFunction, Link, useNavigate} from 'react-router';
 import {
   getSelectedProductOptions,
   Analytics,
@@ -12,6 +12,7 @@ import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import { Block, Navbar, Page } from 'konsta/react';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
   return [
@@ -82,6 +83,7 @@ function loadDeferredData({context, params}: LoaderFunctionArgs) {
 
 export default function Product() {
   const {product} = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -102,10 +104,21 @@ export default function Product() {
   const {title, descriptionHtml} = product;
 
   return (
-    <div className="product">
+    <Page
+      className="product scrollbar-hide"
+      >
+      <Navbar 
+        title={title}
+        className="top-0 sticky"
+        left={
+          <button onClick={() => navigate(-1)}>
+          Back
+        </button>
+        }
+      />
+      <Block>
       <ProductImage image={selectedVariant?.image} />
       <div className="product-main">
-        <h1>{title}</h1>
         <ProductPrice
           price={selectedVariant?.price}
           compareAtPrice={selectedVariant?.compareAtPrice}
@@ -139,7 +152,8 @@ export default function Product() {
           ],
         }}
       />
-    </div>
+      </Block>
+    </Page>
   );
 }
 

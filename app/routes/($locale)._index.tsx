@@ -1,5 +1,5 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Await, useLoaderData, Link, type MetaFunction} from 'react-router';
+import {Await, useLoaderData, Link, type MetaFunction, useLocation} from 'react-router';
 import {Suspense} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
 import type {
@@ -7,6 +7,9 @@ import type {
   RecommendedProductsQuery,
 } from 'storefrontapi.generated';
 import {ProductItem} from '~/components/ProductItem';
+
+import { Page, Navbar, Block, Toolbar } from 'konsta/react';
+import { useDarkMode } from '~/context/ThemeContext';
 
 export const meta: MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
@@ -56,13 +59,30 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
   };
 }
 
+
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
+  const location = useLocation();
+  const { toggleDark, isDark } = useDarkMode();
+
   return (
-    <div className="home">
-      <FeaturedCollection collection={data.featuredCollection} />
-      <RecommendedProducts products={data.recommendedProducts} />
-    </div>
+    <Page key={location.pathname} className="home scrollbar-hide">
+      <Navbar title="Home"
+        right={
+          <button
+            className=""
+            onClick={toggleDark}
+          >
+           {!isDark ? '🌙 Dark' : '☀️ Light'}
+          </button>
+        }
+
+      />
+      <Block>
+        <FeaturedCollection collection={data.featuredCollection} />
+        <RecommendedProducts products={data.recommendedProducts} />
+      </Block>
+    </Page>
   );
 }
 
@@ -99,7 +119,7 @@ function RecommendedProducts({
       <Suspense fallback={<div>Loading...</div>}>
         <Await resolve={products}>
           {(response) => (
-            <div className="recommended-products-grid">
+            <div className="grid grid-cols-2 gap-4">
               {response
                 ? response.products.nodes.map((product) => (
                     <ProductItem key={product.id} product={product} />
@@ -158,7 +178,7 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   }
   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    products(first: 4, sortKey: UPDATED_AT, reverse: true) {
+    products(first: 16, sortKey: UPDATED_AT, reverse: true) {
       nodes {
         ...RecommendedProduct
       }

@@ -1,8 +1,10 @@
-import {useLoaderData, Link} from 'react-router';
+import {useLoaderData, Link, useNavigate, useLocation} from 'react-router';
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {getPaginationVariables, Image} from '@shopify/hydrogen';
 import type {CollectionFragment} from 'storefrontapi.generated';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
+import { Block, Navbar, Page } from 'konsta/react';
+import { useDarkMode } from '~/context/ThemeContext';
 
 export async function loader(args: LoaderFunctionArgs) {
   // Start fetching non-critical data without blocking time to first byte
@@ -20,7 +22,7 @@ export async function loader(args: LoaderFunctionArgs) {
  */
 async function loadCriticalData({context, request}: LoaderFunctionArgs) {
   const paginationVariables = getPaginationVariables(request, {
-    pageBy: 4,
+    pageBy: 16,
   });
 
   const [{collections}] = await Promise.all([
@@ -44,23 +46,42 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 
 export default function Collections() {
   const {collections} = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { isDark, toggleDark } = useDarkMode();
 
   return (
-    <div className="collections">
-      <h1>Collections</h1>
-      <PaginatedResourceSection
-        connection={collections}
-        resourcesClassName="collections-grid"
-      >
-        {({node: collection, index}) => (
-          <CollectionItem
-            key={collection.id}
-            collection={collection}
-            index={index}
-          />
-        )}
-      </PaginatedResourceSection>
-    </div>
+    <Page key={location.pathname} className='collections scrollbar-hide'>
+      <Navbar 
+        title="Collections"
+        subtitle="18 Collections"
+        className="top-0 sticky"
+        left={
+          <button onClick={() => navigate(-1)}>
+            Back
+          </button>
+        }
+        right={
+        <button onClick={toggleDark}>
+          {isDark ? 'Dark' : 'Light'}
+        </button>
+        }
+      />
+      <Block>
+        <PaginatedResourceSection
+          connection={collections}
+          resourcesClassName="grid grid-cols-2 gap-4"
+        >
+          {({node: collection, index}) => (
+            <CollectionItem
+              key={collection.id}
+              collection={collection}
+              index={index}
+            />
+          )}
+        </PaginatedResourceSection>
+      </Block>
+    </Page>
   );
 }
 

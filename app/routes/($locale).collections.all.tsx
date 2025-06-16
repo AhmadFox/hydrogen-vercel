@@ -1,8 +1,9 @@
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {useLoaderData, type MetaFunction} from 'react-router';
+import {Link, useLoaderData, useLocation, useNavigate, type MetaFunction} from 'react-router';
 import {getPaginationVariables, Image, Money} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {ProductItem} from '~/components/ProductItem';
+import { Block, Navbar, Page } from 'konsta/react';
 
 export const meta: MetaFunction<typeof loader> = () => {
   return [{title: `Hydrogen | Products`}];
@@ -48,13 +49,27 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 
 export default function Collection() {
   const {products} = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   return (
-    <div className="collection">
-      <h1>Products</h1>
+    <Page
+      key={location.pathname}
+      className='all-collection scrollbar-hide'
+    >
+      <Navbar 
+        title="All Products"
+        className="top-0 sticky"
+        left={
+          <button onClick={() => navigate(-1)}>
+          Back
+        </button>
+        }
+        />
+      <Block>
       <PaginatedResourceSection
         connection={products}
-        resourcesClassName="products-grid"
+        resourcesClassName="grid grid-cols-2 gap-4"
       >
         {({node: product, index}) => (
           <ProductItem
@@ -64,7 +79,8 @@ export default function Collection() {
           />
         )}
       </PaginatedResourceSection>
-    </div>
+      </Block>
+    </Page>
   );
 }
 
