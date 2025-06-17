@@ -1,5 +1,5 @@
-import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
-import {Await, useLoaderData, Link, type MetaFunction, useLocation} from 'react-router';
+import {type LoaderFunctionArgs, MetaFunction} from '@shopify/remix-oxygen';
+import {Await, useLoaderData, Link, useLocation} from 'react-router';
 import {Suspense} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
 import type {
@@ -10,9 +10,13 @@ import {ProductItem} from '~/components/ProductItem';
 
 import { Page, Navbar, Block, Toolbar } from 'konsta/react';
 import { useDarkMode } from '~/context/ThemeContext';
+import { TransitionLink } from '~/components/TransitionLink';
 
 export const meta: MetaFunction = () => {
-  return [{title: 'Hydrogen | Home'}];
+  return [
+    { title: 'Dkhoun – Premium Oud Fragrance from Saudi Arabia' },
+    { name: 'description', content: 'Explore premium oud and perfumes handmade in KSA. Delivered across the GCC. Shop now on Dkhoun.' },
+  ];
 };
 
 export async function loader(args: LoaderFunctionArgs) {
@@ -59,14 +63,13 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
   };
 }
 
-
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   const location = useLocation();
   const { toggleDark, isDark } = useDarkMode();
 
   return (
-    <Page key={location.pathname} className="home scrollbar-hide">
+    <Page key={location.pathname} className="page home scrollbar-hide">
       <Navbar title="Home"
         right={
           <button
@@ -94,7 +97,7 @@ function FeaturedCollection({
   if (!collection) return null;
   const image = collection?.image;
   return (
-    <Link
+    <TransitionLink
       className="featured-collection"
       to={`/collections/${collection.handle}`}
     >
@@ -104,7 +107,7 @@ function FeaturedCollection({
         </div>
       )}
       <h1>{collection.title}</h1>
-    </Link>
+    </TransitionLink>
   );
 }
 
@@ -115,7 +118,7 @@ function RecommendedProducts({
 }) {
   return (
     <div className="recommended-products">
-      <h2>Recommended Products</h2>
+      <div>Recommended Products</div>
       <Suspense fallback={<div>Loading...</div>}>
         <Await resolve={products}>
           {(response) => (

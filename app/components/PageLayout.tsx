@@ -7,6 +7,7 @@ import type {
 import {Aside} from '~/components/Aside';
 import { KonstaProvider, App, Toolbar } from 'konsta/react';
 import { useDarkMode } from '~/context/ThemeContext';
+import { TransitionLink } from './TransitionLink';
 
 
 interface PageLayoutProps {
@@ -23,16 +24,14 @@ export function PageLayout({children = null}: PageLayoutProps) {
   return (
     <KonstaProvider theme='ios' dark={isDark}>
       <App theme="ios" safeAreas dark={isDark} className={`${isDark && 'dark'}`}>
-        <main>
-          <Aside.Provider>
-            {children}
-            <Toolbar top={false} className="bottom-0 fixed">
-              <Link to="/collections">Collections</Link>
-              <Link to="/">Home</Link>
-              <Link to="/pages/عن-دخون">About</Link>
-            </Toolbar>
-          </Aside.Provider>
-        </main>
+        <Aside.Provider>
+          {children}
+          <Toolbar top={false} className="bottom-0 fixed">
+            <TransitionLink to="/collections">Collections</TransitionLink>
+            <TransitionLink to="/">Home</TransitionLink>
+            <TransitionLink to="/pages/عن-دخون">About</TransitionLink>
+          </Toolbar>
+        </Aside.Provider>
       </App>
     </KonstaProvider>
   );

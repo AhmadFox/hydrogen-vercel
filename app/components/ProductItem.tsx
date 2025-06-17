@@ -1,11 +1,13 @@
-import {Link} from 'react-router';
-import {Image, Money} from '@shopify/hydrogen';
+import {Link } from 'react-router';
+import {Money} from '@shopify/hydrogen';
 import type {
   ProductItemFragment,
   CollectionItemFragment,
   RecommendedProductFragment,
 } from 'storefrontapi.generated';
 import {useVariantUrl} from '~/lib/variants';
+import { SmartImage } from './SmartImage';
+import { TransitionLink } from './TransitionLink';
 
 export function ProductItem({
   product,
@@ -19,23 +21,27 @@ export function ProductItem({
 }) {
   const variantUrl = useVariantUrl(product.handle);
   const image = product.featuredImage;
+
   return (
     <Link
       className="product-item"
       key={product.id}
-      prefetch="intent"
       to={variantUrl}
+      viewTransition
+      prefetch="intent"
+      style={{ viewTransitionName: `product-${product.id}` }}
     >
-      {image && (
-        <Image
-          alt={image.altText || product.title}
-          aspectRatio="1/1"
-          data={image}
-          loading={loading}
-          sizes="(min-width: 45em) 400px, 100vw"
+      <SmartImage
+          image={image ?? undefined}
+          placeholder="placeholder_product.png"
+          width={319}
+          height={319}
+          aspectRatio='1/1'
+          alt={image?.altText || `Product ${product.title} feature image`}
+          className="rounded-md mb-2 aspect-square"
+          style={{ viewTransitionName: `product-${product.id}` }}
         />
-      )}
-      <h4>{product.title}</h4>
+      <div>{product.title}</div>
       <small>
         <Money data={product.priceRange.minVariantPrice} />
       </small>

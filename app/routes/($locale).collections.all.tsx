@@ -5,8 +5,11 @@ import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {ProductItem} from '~/components/ProductItem';
 import { Block, Navbar, Page } from 'konsta/react';
 
-export const meta: MetaFunction<typeof loader> = () => {
-  return [{title: `Hydrogen | Products`}];
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return [
+    {title: `Hydrogen | Products`},
+    { name: 'description', content: 'All products in our store' },
+  ];
 };
 
 export async function loader(args: LoaderFunctionArgs) {
@@ -55,7 +58,7 @@ export default function Collection() {
   return (
     <Page
       key={location.pathname}
-      className='all-collection scrollbar-hide'
+      className='page all-collection scrollbar-hide'
     >
       <Navbar 
         title="All Products"

@@ -1,10 +1,10 @@
-import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
+import { type LoaderFunctionArgs } from '@shopify/remix-oxygen';
 import { Block, BlockFooter, Page as KonstaPage, Navbar } from 'konsta/react';
-import {useLoaderData, useNavigate, type MetaFunction} from 'react-router';
-import {redirectIfHandleIsLocalized} from '~/lib/redirect';
+import { useLoaderData, useNavigate, type MetaFunction } from 'react-router';
+import { redirectIfHandleIsLocalized } from '~/lib/redirect';
 
-export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: `Hydrogen | ${data?.page.title ?? ''}`}];
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  return [{ title: `Hydrogen | ${data?.page.title ?? ''}` }];
 };
 
 export async function loader(args: LoaderFunctionArgs) {
@@ -14,7 +14,7 @@ export async function loader(args: LoaderFunctionArgs) {
   // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
-  return {...deferredData, ...criticalData};
+  return { ...deferredData, ...criticalData };
 }
 
 /**
@@ -30,7 +30,7 @@ async function loadCriticalData({
     throw new Error('Missing page handle');
   }
 
-  const [{page}] = await Promise.all([
+  const [{ page }] = await Promise.all([
     context.storefront.query(PAGE_QUERY, {
       variables: {
         handle: params.handle,
@@ -40,10 +40,10 @@ async function loadCriticalData({
   ]);
 
   if (!page) {
-    throw new Response('Not Found', {status: 404});
+    throw new Response('Not Found', { status: 404 });
   }
 
-  redirectIfHandleIsLocalized(request, {handle: params.handle, data: page});
+  redirectIfHandleIsLocalized(request, { handle: params.handle, data: page });
 
   return {
     page,
@@ -55,21 +55,21 @@ async function loadCriticalData({
  * fetched after the initial page load. If it's unavailable, the page should still 200.
  * Make sure to not throw any errors here, as it will cause the page to 500.
  */
-function loadDeferredData({context}: LoaderFunctionArgs) {
+function loadDeferredData({ context }: LoaderFunctionArgs) {
   return {};
 }
 
 export default function Page() {
-  const {page} = useLoaderData<typeof loader>();
+  const { page } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
   return (
 
-      <KonstaPage
-       key={location.pathname}
-       className='collections scrollbar-hide'
-      >
-         <Navbar
+    <KonstaPage
+      key={location.pathname}
+      className='page scrollbar-hide'
+    >
+      <Navbar
         title={page.title}
         className="top-0 sticky"
         left={
@@ -79,9 +79,9 @@ export default function Page() {
         }
       />
       <Block>
-        <main dangerouslySetInnerHTML={{__html: page.body}} />
+        <main dangerouslySetInnerHTML={{ __html: page.body }} />
       </Block>
-      </KonstaPage>
+    </KonstaPage>
 
   );
 }

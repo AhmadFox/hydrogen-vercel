@@ -2,6 +2,8 @@ import {Analytics, getShopAnalytics, useNonce} from '@shopify/hydrogen';
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {
   Outlet,
+  useOutlet,
+  useLocation,
   useRouteError,
   isRouteErrorResponse,
   type ShouldRevalidateFunction,
@@ -17,7 +19,7 @@ import appStyles from '~/styles/app.css?url';
 import tailwindStyles from '~/styles/tailwind.css?url';
 import {PageLayout} from './components/PageLayout';
 import { ThemeProvider } from './context/ThemeContext';
-
+import { useNavigationDirection } from './hooks/useNavigationDirection';
 export type RootLoader = typeof loader;
 
 /**
@@ -145,14 +147,15 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 export function Layout({children}: {children?: React.ReactNode}) {
   const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>('root');
+  useNavigationDirection();
 
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <link rel="stylesheet" href={appStyles}></link>
         <link rel="stylesheet" href={tailwindStyles}></link>
+        <link rel="stylesheet" href={appStyles}></link>
         <Meta />
         <Links />
       </head>

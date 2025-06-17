@@ -7,8 +7,12 @@ import {ProductItem} from '~/components/ProductItem';
 import { Block, Navbar, Page } from 'konsta/react';
 
 export const meta: MetaFunction<typeof loader> = ({data}) => {
-  return [{title: `Hydrogen | ${data?.collection.title ?? ''} Collection`}];
+  return [
+    {title: `Hydrogen | ${data?.collection.title ?? ''} Collection`},
+    { name: 'description', content: data?.collection.description ?? '' },
+  ];
 };
+
 
 export async function loader(args: LoaderFunctionArgs) {
   // Start fetching non-critical data without blocking time to first byte
@@ -77,7 +81,7 @@ export default function Collection() {
   return (
     <Page
       key={location.pathname}
-      className="collection scrollbar-hide"
+      className="page collection scrollbar-hide"
     >
     <Navbar
     title={collection.title}

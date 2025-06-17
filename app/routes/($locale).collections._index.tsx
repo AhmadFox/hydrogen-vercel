@@ -1,10 +1,19 @@
-import {useLoaderData, Link, useNavigate, useLocation} from 'react-router';
+import {useLoaderData, Link, useNavigate, useLocation, MetaFunction} from 'react-router';
 import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {getPaginationVariables, Image} from '@shopify/hydrogen';
 import type {CollectionFragment} from 'storefrontapi.generated';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
-import { Block, Navbar, Page } from 'konsta/react';
+import { Block, Navbar, Page, Toolbar } from 'konsta/react';
 import { useDarkMode } from '~/context/ThemeContext';
+import { SmartImage } from '~/components/SmartImage';
+import { TransitionLink } from '~/components/TransitionLink';
+
+export const meta: MetaFunction<typeof loader> = ({data}) => {
+  return [
+    {title: `Hydrogen | Collections`},
+    { name: 'description', content: 'browes our collections in store' },
+  ];
+};
 
 export async function loader(args: LoaderFunctionArgs) {
   // Start fetching non-critical data without blocking time to first byte
@@ -51,7 +60,7 @@ export default function Collections() {
   const { isDark, toggleDark } = useDarkMode();
 
   return (
-    <Page key={location.pathname} className='collections scrollbar-hide'>
+    <Page key={location.pathname} className='page collections scrollbar-hide'>
       <Navbar 
         title="Collections"
         subtitle="18 Collections"
@@ -98,16 +107,17 @@ function CollectionItem({
       key={collection.id}
       to={`/collections/${collection.handle}`}
       prefetch="intent"
+      viewTransition
     >
-      {collection?.image && (
-        <Image
-          alt={collection.image.altText || collection.title}
-          aspectRatio="1/1"
-          data={collection.image}
-          loading={index < 3 ? 'eager' : undefined}
-          sizes="(min-width: 45em) 400px, 100vw"
-        />
-      )}
+     <SmartImage
+        image={collection.image ?? undefined}
+        placeholder="/placeholder_collection.png"
+        aspectRatio='1/1'
+        width={319}
+        height={319}
+        alt={collection?.image?.altText || `Collection ${collection.title} feature image`}
+        className="rounded-md mb-2 aspect-square"
+      />
       <h5>{collection.title}</h5>
     </Link>
   );

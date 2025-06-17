@@ -21,6 +21,7 @@ export const meta: MetaFunction<typeof loader> = ({data}) => {
       rel: 'canonical',
       href: `/products/${data?.product.handle}`,
     },
+    { name: 'description', content: data?.product.description ?? 'product has no description' },
   ];
 };
 
@@ -105,7 +106,7 @@ export default function Product() {
 
   return (
     <Page
-      className="product scrollbar-hide"
+      className="page product scrollbar-hide"
       >
       <Navbar 
         title={title}
@@ -117,7 +118,7 @@ export default function Product() {
         }
       />
       <Block>
-      <ProductImage image={selectedVariant?.image} />
+      <ProductImage title={product.title} image={selectedVariant?.image} />
       <div className="product-main">
         <ProductPrice
           price={selectedVariant?.price}
