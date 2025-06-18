@@ -147,7 +147,7 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 export function Layout({children}: {children?: React.ReactNode}) {
   const nonce = useNonce();
   const data = useRouteLoaderData<RootLoader>('root');
-  useNavigationDirection();
+  // useNavigationDirection();
 
   return (
     <html lang="en">
