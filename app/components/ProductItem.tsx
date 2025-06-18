@@ -8,6 +8,7 @@ import type {
 import {useVariantUrl} from '~/lib/variants';
 import { SmartImage } from './SmartImage';
 import { TransitionLink } from './TransitionLink';
+import { Block, BlockFooter, BlockTitle } from 'konsta/react';
 
 export function ProductItem({
   product,
@@ -40,11 +41,9 @@ export function ProductItem({
           alt={image?.altText || `Product ${product.title} feature image`}
           className="rounded-md mb-2 aspect-square"
           style={{ viewTransitionName: `product-${product.id}` }}
-        />
-      <div>{product.title}</div>
-      <small>
-        <Money data={product.priceRange.minVariantPrice} />
-      </small>
+      />
+      <BlockFooter className='mt-0 mb-0 justify-center !px-0'>{product.title}</BlockFooter>
+      <BlockTitle className='mt-0 mb-0 !justify-center !px-0'><Money data={product.priceRange.minVariantPrice} /></BlockTitle>
     </Link>
   );
 }

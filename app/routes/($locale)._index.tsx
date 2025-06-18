@@ -8,7 +8,7 @@ import type {
 } from 'storefrontapi.generated';
 import {ProductItem} from '~/components/ProductItem';
 
-import { Page, Navbar, Block, Toolbar } from 'konsta/react';
+import { Page, Navbar, Block, Toolbar, BlockTitle } from 'konsta/react';
 import { useDarkMode } from '~/context/ThemeContext';
 import { TransitionLink } from '~/components/TransitionLink';
 
@@ -81,10 +81,8 @@ export default function Homepage() {
         }
 
       />
-      <Block>
-        <FeaturedCollection collection={data.featuredCollection} />
-        <RecommendedProducts products={data.recommendedProducts} />
-      </Block>
+      <FeaturedCollection collection={data.featuredCollection} />
+      <RecommendedProducts products={data.recommendedProducts} />
     </Page>
   );
 }
@@ -97,7 +95,8 @@ function FeaturedCollection({
   if (!collection) return null;
   const image = collection?.image;
   return (
-    <TransitionLink
+   <Block>
+     <TransitionLink
       className="featured-collection"
       to={`/collections/${collection.handle}`}
     >
@@ -106,8 +105,9 @@ function FeaturedCollection({
           <Image data={image} sizes="100vw" />
         </div>
       )}
-      <h1>{collection.title}</h1>
+      <BlockTitle className='!m-0 !p-0'>{collection.title}</BlockTitle>
     </TransitionLink>
+   </Block>
   );
 }
 
@@ -117,8 +117,8 @@ function RecommendedProducts({
   products: Promise<RecommendedProductsQuery | null>;
 }) {
   return (
-    <div className="recommended-products">
-      <div>Recommended Products</div>
+    <Block>
+      <BlockTitle className='mb-3 !p-0'>Recommended Products</BlockTitle>
       <Suspense fallback={<div>Loading...</div>}>
         <Await resolve={products}>
           {(response) => (
@@ -132,8 +132,7 @@ function RecommendedProducts({
           )}
         </Await>
       </Suspense>
-      <br />
-    </div>
+    </Block>
   );
 }
 

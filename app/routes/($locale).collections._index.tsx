@@ -3,7 +3,7 @@ import {type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {getPaginationVariables, Image} from '@shopify/hydrogen';
 import type {CollectionFragment} from 'storefrontapi.generated';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
-import { Block, Navbar, Page, Toolbar } from 'konsta/react';
+import { Block, BlockTitle, Navbar, Page, Toolbar } from 'konsta/react';
 import { useDarkMode } from '~/context/ThemeContext';
 import { SmartImage } from '~/components/SmartImage';
 import { TransitionLink } from '~/components/TransitionLink';
@@ -118,7 +118,7 @@ function CollectionItem({
         alt={collection?.image?.altText || `Collection ${collection.title} feature image`}
         className="rounded-md mb-2 aspect-square"
       />
-      <h5>{collection.title}</h5>
+      <BlockTitle className='mb-0 mt-0 !px-0 !justify-center'>{collection.title}</BlockTitle>
     </Link>
   );
 }
