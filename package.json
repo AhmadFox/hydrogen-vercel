@@ -5,7 +5,8 @@
   "version": "2025.5.1",
   "type": "module",
   "scripts": {
-    "build": "shopify hydrogen build --codegen",
+    "build": "remix build",
+    "remix": "remix",
     "dev": "shopify hydrogen dev --codegen",
     "preview": "shopify hydrogen preview --build",
     "lint": "eslint --no-error-on-unmatched-pattern .",
@@ -14,7 +15,6 @@
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
-    "@remix-run/dev": "^2.16.8",
     "@shopify/hydrogen": "2025.5.0",
     "@types/sharp": "^0.31.1",
     "@use-gesture/react": "^10.3.1",
@@ -36,6 +36,7 @@
     "@graphql-codegen/cli": "5.0.2",
     "@react-router/dev": "7.6.0",
     "@react-router/fs-routes": "7.6.0",
+    "@remix-run/dev": "^2.16.8",
     "@shopify/cli": "~3.80.4",
     "@shopify/hydrogen-codegen": "^0.3.3",
     "@shopify/mini-oxygen": "^3.2.1",
